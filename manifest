@@ -1,0 +1,17 @@
+: 1
+name: libbutl.bash
+version: 0.8.0-a.0.z
+project: build2
+summary: build2 utility library for bash
+license: MIT
+tags: utility, library, bash
+description-file: README
+changes-file: NEWS
+url: https://build2.org
+doc-url: https://build2.org/doc.xhtml
+src-url: https://git.build2.org/cgit/libbutl.bash/tree/
+email: users@build2.org
+build-email: builds@build2.org
+requires: bash >= 4
+depends: * build2 >= 0.8.0-
+depends: * bpkg >= 0.8.0-

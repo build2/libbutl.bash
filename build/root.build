@@ -1,0 +1,16 @@
+# file      : build/root.build
+# copyright : Copyright (c) 2014-2018 Code Synthesis Ltd
+# license   : MIT; see accompanying LICENSE file
+
+# Bash module target type.
+#
+# We install it into the same location where the scripts that use it would
+# presumably go.
+#
+# @@ Path/string cast is ugly, should go away once have implicit to-untyped
+#    conversion during function call.
+#
+define bash: file
+bash{*}: extension    = bash
+bash{*}: install      = bin/([string] $path.base([path] $project))/
+bash{*}: install.mode = 644

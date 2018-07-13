@@ -1,0 +1,11 @@
+# file      : build/bootstrap.build
+# copyright : Copyright (c) 2014-2018 Code Synthesis Ltd
+# license   : MIT; see accompanying LICENSE file
+
+project = libbutl.bash
+
+using version
+using config
+using dist
+using test
+using install
