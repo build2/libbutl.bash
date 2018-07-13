@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+function import ()
+{
+  # Here we don't assume the errors are trapped. If all goes well, our exit
+  # code is that of source (which fails if the file is not found).
+  #
+  local e; if ! e="$(realpath ${BASH_SOURCE[0]})"; then return 1; fi
+  local d; if ! d="$(dirname "$e")"; then return 1; fi
+  source "$d/$1.bash"
+}
+
+trap "{ exit 1; }" ERR
+set -o errtrace # Trap ERR in functions.
+
+import libbutl/manifest-parser
+
+# @@ parse_manifest failure ignored
+#
+# @@ what would be equivalent serialization interface? Just serialize one
+#    name/value in manifest format (so explicit version).
+#
+while IFS=': ' read -r -d '' n v; do
+  if [ -z "$n" ]; then
+    echo "$v"
+  else
+    echo # Extra newline after first pair.
+    echo "$n"
+    echo "$v"
+  fi
+done < <(parse_manifest)
