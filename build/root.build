@@ -12,5 +12,5 @@
 #
 define bash: file
 bash{*}: extension    = bash
-bash{*}: install      = bin/([string] $path.base([path] $project))/
+bash{*}: install      = bin/$path.base($project)/
 bash{*}: install.mode = 644
