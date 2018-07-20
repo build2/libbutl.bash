@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# file      : tests/manifest-parser/driver.in
+# copyright : Copyright (c) 2014-2018 Code Synthesis Ltd
+# license   : MIT; see accompanying LICENSE file
+
+trap "{ exit 1; }" ERR
+set -o errtrace # Trap ERR in functions.
+
+@import libbutl/manifest-parser@
+
+while IFS=: read -r -d '' n v; do
+  if [ -z "$n" ]; then
+    echo "$v"
+  else
+    echo # Extra newline after first pair.
+    echo "$n"
+    echo "$v"
+  fi
+done < <(butl_parse_manifest)
