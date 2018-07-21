@@ -2,4 +2,7 @@
 # copyright : Copyright (c) 2014-2018 Code Synthesis Ltd
 # license   : MIT; see accompanying LICENSE file
 
-./: bash{manifest-parser}
+./: bash{$path.base($path.base(*.bash.in))}
+
+bash{utility}: in{utility}
+bash{manifest-parser}: in{manifest-parser} bash{utility}

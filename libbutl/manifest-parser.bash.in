@@ -1,0 +1,83 @@
+# file      : libbutl/manifest-parser.bash.in
+# copyright : Copyright (c) 2014-2018 Code Synthesis Ltd
+# license   : MIT; see accompanying LICENSE file
+
+if [ "$butl_manifest_parser" = true ]; then
+  return 0
+else
+  butl_manifest_parser=true
+fi
+
+@import libbutl/utility@
+
+# Parse the manifest from stdin writing the binary representation to stdout.
+#
+# Normally you would use the start/finish functions below. But if you don't
+# care about errors, the following would be the typical usage:
+#
+# while IFS=: read -r -d '' n v; do
+#   ...
+# done < <(butl_parse_manifest)
+#
+function butl_parse_manifest ()
+{
+  printf ":1\0"
+  printf "name:foo\0"
+  printf "version:1.2.3\0"
+  printf "description:foo\nexecutable\0"
+  printf "depends:libfoo\0"
+  printf "depends:libbar\0"
+}
+
+# Start the manifest parsing co-process setting the following "return"
+# variables:
+#
+#   butl_manifest_parser_ofd
+#   butl_manifest_parser_ifd
+#   butl_manifest_parser_pid
+#
+# If <file> is not specified, then read from stdin.
+#
+# The typical usage:
+#
+#   butl_manifest_parser_start
+#
+#   while IFS=: read -ru "$butl_manifest_parser_ofd" -d '' n v; do
+#     ...
+#   done
+#
+#   butl_manifest_parser_finish
+#
+function butl_manifest_parser_start () # [<file>]
+{
+  if [ "$#" -gt 0 ]; then
+    exec {butl_manifest_parser_ifd}<"$1"
+  else
+    exec {butl_manifest_parser_ifd}<&0
+  fi
+
+  # Note that bash co-process facility is racy: as soon as the process
+  # finishes, bash unsets COPROC/COPROC_PID (my guess would be it checks after
+  # each command in the script). This specific sequence of steps (and the one
+  # in *_finish()) seems to work reliably at least from bash 4.3.30 and
+  # up. See the following resources for details:
+  #
+  # http://wiki.bash-hackers.org/syntax/keywords/coproc
+  # http://tldp.org/LDP/abs/html/bashver4.html (coproc section)
+  # https://lists.gnu.org/archive/html/bug-bash/2014-02/msg00017.html
+  # https://lists.gnu.org/archive/html/bug-bash/2012-12/msg00069.html
+  # https://lists.gnu.org/archive/html/bug-bash/2012-10/msg00027.html
+  #
+  coproc { butl_parse_manifest; } <&"$butl_manifest_parser_ifd"
+  exec {butl_manifest_parser_ofd}<&"${COPROC[0]}"
+  butl_manifest_parser_pid="$COPROC_PID"
+}
+
+# Finish the manifest parsing co-process.
+#
+function butl_manifest_parser_finish ()
+{
+  exec {butl_manifest_parser_ofd}<&-
+  wait "$butl_manifest_parser_pid"
+  exec {butl_manifest_parser_ifd}<&-
+}

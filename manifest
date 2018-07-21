@@ -12,6 +12,9 @@ doc-url: https://build2.org/doc.xhtml
 src-url: https://git.build2.org/cgit/libbutl.bash/tree/
 email: users@build2.org
 build-email: builds@build2.org
-requires: bash >= 4
+build-exclude: windows*; Requires bash
+build-exclude: macos*; Requires bash >= 4.3
+build-include: *
+requires: bash >= 4.3
 depends: * build2 >= 0.8.0-
 depends: * bpkg >= 0.8.0-

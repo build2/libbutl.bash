@@ -9,7 +9,9 @@ set -o errtrace # Trap ERR in functions.
 
 @import libbutl/manifest-parser@
 
-while IFS=: read -r -d '' n v; do
+butl_manifest_parser_start "$@"
+
+while IFS=: read -ru "$butl_manifest_parser_ofd" -d '' n v; do
   if [ -z "$n" ]; then
     echo "$v"
   else
@@ -17,4 +19,6 @@ while IFS=: read -r -d '' n v; do
     echo "$n"
     echo "$v"
   fi
-done < <(butl_parse_manifest)
+done
+
+butl_manifest_parser_finish

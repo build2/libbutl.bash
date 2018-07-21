@@ -21,3 +21,5 @@ libfoo
 depends
 libbar
 EOO
+
+#@@ TODO: test reading from file instead of stdin.
