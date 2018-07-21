@@ -2,34 +2,96 @@
 # copyright : Copyright (c) 2014-2018 Code Synthesis Ltd
 # license   : MIT; see accompanying LICENSE file
 
-$* <<EOI >>EOO
+: stdout
+{
+  $* <<EOI >>EOO
 
-1
+    1
 
-name
-foo
+    name
+    foo
 
-version
-1.2.3
+    version
+    1.2.3
 
-description
-foo
-executable
+    description
+    foo
+    executable
 
-depends
-libfoo
+    depends
+    libfoo
 
-depends
-libbar
+    depends
+    libbar
 
-EOI
-: 1
-name: foo
-version: 1.2.3
-description: foo
-executable
-depends: libfoo
-depends: libbar
-EOO
+    EOI
+    : 1
+    name: foo
+    version: 1.2.3
+    description: \
+    foo
+    executable
+    \
+    depends: libfoo
+    depends: libbar
+    EOO
+}
 
-#@@ TODO: test writing to file instead of stdout.
+: file
+{
+  $* <<EOI >=file;
+
+    1
+
+    name
+    foo
+
+    version
+    1.2.3
+    EOI
+
+  cat file >>EOE
+    : 1
+    name: foo
+    version: 1.2.3
+    EOE
+}
+
+: list
+{
+  $* <<EOI >>EOO
+
+    1
+
+    name
+    foo
+
+
+    1
+
+    version
+    1.2.3
+    EOI
+    : 1
+    name: foo
+    :
+    version: 1.2.3
+    EOO
+}
+
+: version
+:
+{
+  : absent
+  :
+  $* <<EOI 2>'stdout: error: format version pair expected' != 0
+    name
+    foo
+    EOI
+}
+
+: empty
+:
+{
+  $* <:'' >:''
+}

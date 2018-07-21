@@ -2,24 +2,101 @@
 # copyright : Copyright (c) 2014-2018 Code Synthesis Ltd
 # license   : MIT; see accompanying LICENSE file
 
-$* >>EOO
-1
+: stdin
+:
+{
+  $* <<EOI >>EOO
+    : 1
+    name: foo
+    version: 1.2.3
+    description: \
+    foo
+    executable
+    \
+    depends: libfoo
+    depends: libbar
+    EOI
+    1
 
-name
-foo
+    name
+    foo
 
-version
-1.2.3
+    version
+    1.2.3
 
-description
-foo
-executable
+    description
+    foo
+    executable
 
-depends
-libfoo
+    depends
+    libfoo
 
-depends
-libbar
-EOO
+    depends
+    libbar
+    EOO
+}
 
-#@@ TODO: test reading from file instead of stdin.
+: file
+:
+{
+  cat <<EOI >=file;
+    : 1
+    name: foo
+    version: 1.2.3
+    EOI
+
+  $* file >>EOO
+    1
+
+    name
+    foo
+
+    version
+    1.2.3
+    EOO
+}
+
+: list
+:
+{
+  $* <<EOI >>EOO
+    : 1
+    name: foo
+    :
+    version: 1.2.3
+    EOI
+    1
+
+    name
+    foo
+    1
+
+    version
+    1.2.3
+    EOO
+}
+
+: version
+:
+{
+  : absent
+  :
+  $* <<EOI 2>'stdin:1:1: error: format version pair expected' != 0
+    name: foo
+    EOI
+
+  : unsupported
+  :
+  $* <<EOI >- 2>'stdin:3:3: error: unsupported format version 2' != 0
+    : 1
+    name: foo
+    : 2
+    version: 1.2.3
+    EOI
+}
+
+: empty
+:
+{
+  $* <:'' >:''
+}

@@ -2,30 +2,80 @@
 // copyright : Copyright (c) 2014-2018 Code Synthesis Ltd
 // license   : MIT; see accompanying LICENSE file
 
+#include <ios>       // ios::failure, ios::*bit
 #include <string>
+#include <cassert>
+#include <cstddef>   // size_t
 #include <iostream>
+#include <stdexcept> // invalid_argument
 
 #include <libbutl/utility.mxx>
+#include <libbutl/fdstream.mxx>
 #include <libbutl/manifest-parser.mxx>
 #include <libbutl/manifest-serializer.mxx>
 
 using namespace std;
 using namespace butl;
 
+// Set the binary translation mode for stdout. Throw ios::failure on error.
+// Noop on POSIX.
+//
+// Note that it makes sense to set the binary mode for stdout not to litter
+// the resulting manifest representation with the carriage return characters
+// on Windows.
+//
+static void
+stdout_binary ()
+{
+  try
+  {
+    stdout_fdmode (fdstream_mode::binary);
+  }
+  catch (const invalid_argument&)
+  {
+    assert (false); // No reason to happen.
+  }
+}
+
 static int
 cmd_parse ()
 {
-  //@@ TODO
+  using parser     = manifest_parser;
+  using parsing    = manifest_parsing;
+  using name_value = manifest_name_value;
 
-  const char m[] =
-    ":1\0"
-    "name:foo\0"
-    "version:1.2.3\0"
-    "description:foo\nexecutable\0"
-    "depends:libfoo\0"
-    "depends:libbar"; // Last \0 will be added.
+  // Parse the manifest list and write its binary representation.
+  //
+  try
+  {
+    stdout_binary ();
 
-  cout.write (m, sizeof (m));
+    cin.exceptions  (ios::badbit | ios::failbit);
+    cout.exceptions (ios::badbit | ios::failbit);
+
+    parser p (cin, "stdin");
+
+    // Iterate over manifests in the list.
+    //
+    for (name_value nv (p.next ()); !nv.empty (); nv = p.next ())
+    {
+      // Iterate over manifest name/values.
+      //
+      for (; !nv.empty (); nv = p.next ())
+        cout << nv.name << ':' << nv.value << '\0' << flush;
+    }
+  }
+  catch (const parsing& e)
+  {
+    cerr << e << endl;
+    return 1;
+  }
+  catch (const ios::failure& e)
+  {
+    cerr << "error: unable to read from stdin or write to stdout: " << e
+         << endl;
+    return 1;
+  }
 
   return 0;
 }
@@ -33,7 +83,51 @@ cmd_parse ()
 static int
 cmd_serialize ()
 {
-  //@@ TODO
+  using serializer    = manifest_serializer;
+  using serialization = manifest_serialization;
+
+  try
+  {
+    stdout_binary ();
+
+    // Don't throw when failbit is set (getline() failed to extract any
+    // characters).
+    //
+    cin.exceptions  (ios::badbit);
+
+    cout.exceptions (ios::badbit | ios::failbit);
+
+    serializer s (cout, "stdout");
+
+    for (string l; !eof (getline (cin, l, '\0')); )
+    {
+      size_t p (l.find (':'));
+
+      if (p == string::npos)
+        throw serialization (s.name (), "':' expected after name");
+
+      string n (l, 0, p);
+      string v (l, p + 1);
+
+      // Validates the name. Expects the first pair to be the format version.
+      // Ends current and starts next manifest for the start-of-manifest pair.
+      //
+      s.next (n, v);
+    }
+
+    s.next ("", ""); // End of manifest list.
+  }
+  catch (const serialization& e)
+  {
+    cerr << e << endl;
+    return 1;
+  }
+  catch (const ios::failure& e)
+  {
+    cerr << "error: unable to read from stdin or write to stdout: " << e
+         << endl;
+    return 1;
+  }
 
   return 0;
 }

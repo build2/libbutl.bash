@@ -14,7 +14,6 @@ butl_manifest_serializer_start "$@"
 fd="$butl_manifest_serializer_ifd"
 
 while read -r n; do
-
   printf "%s:" "$n" >&"$fd"
 
   f=true
@@ -31,7 +30,6 @@ while read -r n; do
       printf "%s" "$v" >&"$fd"
     fi
   done
-
 done
 
 butl_manifest_serializer_finish
