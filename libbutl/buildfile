@@ -2,8 +2,16 @@
 # copyright : Copyright (c) 2014-2018 Code Synthesis Ltd
 # license   : MIT; see accompanying LICENSE file
 
+import libs = libbutl%lib{butl}
+
 ./: bash{$path.base($path.base(*.bash.in))}
 
 bash{utility}:             in{utility}
-bash{manifest-parser}:     in{manifest-parser} bash{utility}
-bash{manifest-serializer}: in{manifest-serializer} bash{utility}
+bash{manifest-parser}:     in{manifest-parser}     bash{utility} exe{manifest}
+bash{manifest-serializer}: in{manifest-serializer} bash{utility} exe{manifest}
+
+exe{manifest}: cxx{manifest} $libs
+
+# Install our binding support executables next to the modules.
+#
+exe{*}: install = bin/libbutl/

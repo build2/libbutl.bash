@@ -17,6 +17,9 @@ fi
 #
 function butl_serialize_manifest ()
 {
+  # @@ TODO
+  #"$(butl_path)/manifest" serialize
+
   local n v
   while IFS=: read -r -d '' n v; do
     printf "$n: $v\n"

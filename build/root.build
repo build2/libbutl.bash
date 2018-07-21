@@ -3,3 +3,12 @@
 # license   : MIT; see accompanying LICENSE file
 
 using bash
+
+cxx.std = latest
+
+using cxx
+
+hxx{*}: extension = hxx
+ixx{*}: extension = ixx
+txx{*}: extension = txx
+cxx{*}: extension = cxx

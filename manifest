@@ -16,5 +16,7 @@ build-exclude: windows*; Requires bash
 build-exclude: macos*; Requires bash >= 4.3
 build-include: *
 requires: bash >= 4.3
+requires: c++14
 depends: * build2 >= 0.8.0-
 depends: * bpkg >= 0.8.0-
+depends: libbutl [0.8.0-a.0.1 0.8.0-a.1)
