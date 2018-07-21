@@ -1,0 +1,35 @@
+# file      : tests/manifest-serializer/testscript
+# copyright : Copyright (c) 2014-2018 Code Synthesis Ltd
+# license   : MIT; see accompanying LICENSE file
+
+$* <<EOI >>EOO
+
+1
+
+name
+foo
+
+version
+1.2.3
+
+description
+foo
+executable
+
+depends
+libfoo
+
+depends
+libbar
+
+EOI
+: 1
+name: foo
+version: 1.2.3
+description: foo
+executable
+depends: libfoo
+depends: libbar
+EOO
+
+#@@ TODO: test writing to file instead of stdout.

@@ -1,0 +1,69 @@
+# file      : libbutl/manifest-serializer.bash.in
+# copyright : Copyright (c) 2014-2018 Code Synthesis Ltd
+# license   : MIT; see accompanying LICENSE file
+
+if [ "$butl_manifest_serializer" ]; then
+  return 0
+else
+  butl_manifest_serializer=true
+fi
+
+@import libbutl/utility@
+
+# Serialize the manifest reading the binary representation from stdin and
+# writing to stdout.
+#
+# Normally you would use the start/finish functions below.
+#
+function butl_serialize_manifest ()
+{
+  local n v
+  while IFS=: read -r -d '' n v; do
+    printf "$n: $v\n"
+  done
+}
+
+# Start the manifest serialization co-process setting the following "return"
+# variables:
+#
+#   butl_manifest_serializer_ifd
+#   butl_manifest_serializer_ofd
+#   butl_manifest_serializer_pid
+#
+# If <file> is not specified, then write to stdout.
+#
+# The typical usage:
+#
+#   butl_manifest_serializer_start
+#
+#   fd="$butl_manifest_serializer_ifd"
+#
+#   printf ":1\0"             >&"$fd"
+#   printf "name:foo\0"       >&"$fd"
+#   printf "version:1.2.3\0"  >&"$fd"
+#
+#   butl_manifest_serializer_finish
+#
+function butl_manifest_serializer_start () # [<file>]
+{
+  if [ "$#" -gt 0 ]; then
+    exec {butl_manifest_serializer_ofd}>"$1"
+  else
+    exec {butl_manifest_serializer_ofd}>&1
+  fi
+
+  # See notes in butl_manifest_parser_start() on bash co-process issues.
+  #
+  coproc { butl_serialize_manifest; } >&"$butl_manifest_serializer_ofd"
+  butl_manifest_serializer_ifd="${COPROC[1]}"
+  butl_manifest_serializer_pid="$COPROC_PID"
+}
+
+# Finish the manifest serialization co-process.
+#
+function butl_manifest_serializer_finish ()
+{
+  exec {butl_manifest_serializer_ifd}<&-
+  wait "$butl_manifest_serializer_pid"
+  exec {butl_manifest_serializer_ofd}<&-
+}

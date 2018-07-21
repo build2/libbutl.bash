@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# file      : tests/manifest-serializer/driver.in
+# copyright : Copyright (c) 2014-2018 Code Synthesis Ltd
+# license   : MIT; see accompanying LICENSE file
+
+trap "{ exit 1; }" ERR
+set -o errtrace # Trap ERR in functions.
+
+@import libbutl/manifest-serializer@
+
+butl_manifest_serializer_start "$@"
+
+fd="$butl_manifest_serializer_ifd"
+
+while read -r n; do
+
+  printf "%s:" "$n" >&"$fd"
+
+  f=true
+  while read -r v; do
+    if [ -z "$v" ]; then
+      printf "\0" >&"$fd"
+      break
+    else
+      if [ "$f" ]; then
+	f=
+      else
+	printf "\n" >&"$fd"
+      fi
+      printf "%s" "$v" >&"$fd"
+    fi
+  done
+
+done
+
+butl_manifest_serializer_finish
