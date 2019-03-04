@@ -12,12 +12,9 @@ doc-url: https://build2.org/doc.xhtml
 src-url: https://git.build2.org/cgit/libbutl.bash/tree/
 email: users@build2.org
 build-email: builds@build2.org
-#builds: all
-#builds: -windows ; Requires bash.
-#builds: -macos   ; Requires bash >= 4.3.
-build-exclude: windows** ; Requires bash.
-build-exclude: macos**   ; Requires bash >= 4.3.
-build-include: **
+builds: all
+builds: -windows ; Requires bash.
+builds: -macos   ; Requires bash >= 4.3.
 requires: bash >= 4.3
 requires: c++14
 depends: * build2 >= 0.9.0
