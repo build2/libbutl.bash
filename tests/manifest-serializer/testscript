@@ -3,6 +3,7 @@
 # license   : MIT; see accompanying LICENSE file
 
 : stdout
+:
 {
   $* <<EOI >>EOO
 
@@ -38,6 +39,7 @@
 }
 
 : file
+:
 {
   $* <<EOI >=file;
 
@@ -58,6 +60,7 @@
 }
 
 : list
+:
 {
   $* <<EOI >>EOO
 
@@ -77,6 +80,58 @@
     :
     version: 1.2.3
     EOO
+}
+
+: break-lines
+:
+{
+  $* <<EOI >>EOO
+
+    1
+
+    name
+    foooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+    EOI
+    : 1
+    name: foooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo\
+    oooo
+    EOO
+}
+
+: long-lines
+:
+{
+  : file
+  :
+  {
+    $* --long-lines file <<EOI >=file;
+
+      1
+
+      name
+      foooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+      EOI
+
+    cat file >>EOO
+      : 1
+      name: foooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+      EOO
+  }
+
+  : stdout
+  :
+  {
+    $* --long-lines <<EOI >>EOO
+
+      1
+
+      name
+      foooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+      EOI
+      : 1
+      name: foooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+      EOO
+  }
 }
 
 : version

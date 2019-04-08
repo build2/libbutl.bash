@@ -81,7 +81,7 @@ cmd_parse ()
 }
 
 static int
-cmd_serialize ()
+cmd_serialize (bool long_lines)
 {
   using serializer    = manifest_serializer;
   using serialization = manifest_serialization;
@@ -97,7 +97,7 @@ cmd_serialize ()
 
     cout.exceptions (ios::badbit | ios::failbit);
 
-    serializer s (cout, "stdout");
+    serializer s (cout, "stdout", long_lines);
 
     for (string l; !eof (getline (cin, l, '\0')); )
     {
@@ -132,21 +132,38 @@ cmd_serialize ()
   return 0;
 }
 
+// Usages:
+//
+// argv[0] parse
+// argv[0] [--long-lines] serialize
+//
 int
 main (int argc, char* argv[])
 {
   // We should switch to CLI if we need anything more elaborate.
   //
-  if (argc < 2)
+  int i (1);
+  bool long_lines (false);
+  for (; i != argc; ++i)
+  {
+    string op (argv[i]);
+
+    if (op == "--long-lines")
+      long_lines = true;
+    else
+      break;
+  }
+
+  if (i == argc)
   {
     cerr << "error: missing command" << endl;
     return 1;
   }
 
-  string c (argv[1]);
+  string c (argv[i]);
 
   if (c == "parse")     return cmd_parse ();
-  if (c == "serialize") return cmd_serialize ();
+  if (c == "serialize") return cmd_serialize (long_lines);
 
   cerr << "error: unknown command '" << c << "'" << endl;
   return 1;

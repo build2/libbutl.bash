@@ -23,9 +23,9 @@ while read -r n; do
       break
     else
       if [ "$f" ]; then
-	f=
+        f=
       else
-	printf "\n" >&"$fd"
+        printf "\n" >&"$fd"
       fi
       printf "%s" "$v" >&"$fd"
     fi

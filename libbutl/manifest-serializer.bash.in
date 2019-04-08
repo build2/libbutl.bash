@@ -11,13 +11,13 @@ fi
 @import libbutl/utility@
 
 # Serialize the manifest reading the binary representation from stdin and
-# writing to stdout.
+# writing to stdout. Unless --long-lines is specified, break lines in values.
 #
 # Normally you would use the start/finish functions below.
 #
-function butl_serialize_manifest ()
+function butl_serialize_manifest () # [--long-lines]
 {
-  "$(butl_path)/manifest" serialize
+  "$(butl_path)/manifest" "$@" serialize
 }
 
 # Start the manifest serialization co-process setting the following "return"
@@ -27,7 +27,8 @@ function butl_serialize_manifest ()
 #   butl_manifest_serializer_ofd
 #   butl_manifest_serializer_pid
 #
-# If <file> is not specified, then write to stdout.
+# If <file> is not specified, then write to stdout. Unless --long-lines is
+# specified, break lines in values.
 #
 # The typical usage:
 #
@@ -41,8 +42,21 @@ function butl_serialize_manifest ()
 #
 #   butl_manifest_serializer_finish
 #
-function butl_manifest_serializer_start () # [<file>]
+function butl_manifest_serializer_start () # [--long-lines] [<file>]
 {
+  local ops=()
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --long-lines)
+        ops+=("$1")
+        shift
+        ;;
+      *)
+        break
+        ;;
+    esac
+  done
+
   if [ "$#" -gt 0 ]; then
     exec {butl_manifest_serializer_ofd}>"$1"
   else
@@ -51,7 +65,7 @@ function butl_manifest_serializer_start () # [<file>]
 
   # See notes in butl_manifest_parser_start() on bash co-process issues.
   #
-  coproc { butl_serialize_manifest; } >&"$butl_manifest_serializer_ofd"
+  coproc { butl_serialize_manifest "${ops[@]}"; } >&"$butl_manifest_serializer_ofd"
   butl_manifest_serializer_ifd="${COPROC[1]}"
   butl_manifest_serializer_pid="$COPROC_PID"
 }
