@@ -64,6 +64,10 @@ function butl_manifest_parser_start () # [<file>]
   # https://lists.gnu.org/archive/html/bug-bash/2012-12/msg00069.html
   # https://lists.gnu.org/archive/html/bug-bash/2012-10/msg00027.html
   #
+  # Also note that the bash bug (still present in 5.0) prevents running
+  # multiple coprocesses at a time (see the BUGS section of bash(1) man page
+  # for details).
+  #
   coproc { butl_parse_manifest; } <&"$butl_manifest_parser_ifd"
   exec {butl_manifest_parser_ofd}<&"${COPROC[0]}"
   butl_manifest_parser_pid="$COPROC_PID"
