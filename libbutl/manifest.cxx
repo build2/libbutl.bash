@@ -1,5 +1,4 @@
 // file      : libbutl/manifest.cxx
-// copyright : Copyright (c) 2014-2019 Code Synthesis Ltd
 // license   : MIT; see accompanying LICENSE file
 
 #include <ios>       // ios::failure, ios::*bit
