@@ -1,6 +1,6 @@
 : 1
 name: libbutl.bash
-version: 0.13.0-a.0.z
+version: 0.13.0
 project: build2
 summary: build2 utility library for bash
 license: MIT
@@ -17,6 +17,6 @@ builds: -windows ; Requires bash.
 builds: -macos   ; Requires bash >= 4.3.
 requires: bash >= 4.3
 requires: c++14
-depends: * build2 >= 0.13.0-
-depends: * bpkg >= 0.13.0-
-depends: libbutl [0.13.0-a.0.1 0.13.0-a.1)
+depends: * build2 >= 0.13.0
+depends: * bpkg >= 0.13.0
+depends: libbutl ^0.13.0
