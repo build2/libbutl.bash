@@ -1,0 +1,46 @@
+# file      : libbutl/standard-version.bash.in
+# license   : MIT; see accompanying LICENSE file
+
+if [ "$butl_standard_version" ]; then
+  return 0
+else
+  butl_standard_version=true
+fi
+
+@import libbutl/utility@
+
+# Check that the specified predicates are true for a standard version.
+#
+# Parse the standard version and exit with code 0 if all the specified
+# predicates are true and code 1 otherwise. If the specified argument is not a
+# valid standard version, then print the error description to stderr, unless
+# --is-version option is specified, and exit with code 2. For other errors
+# (usage, etc), issue diagnostics and exit with code 3.
+#
+# Options in the --is-[not-]<predicate> form enable the standard version
+# predicate checks. The recognized predicates are:
+#
+#   snapshot
+#   latest-snapshot
+#   alpha
+#   beta
+#   pre-release
+#   release
+#   final
+#   stub
+#   earliest
+#
+# Note that specifying opposite predicates (for example, --is-beta and
+# --is-not-beta) is not a usage error and results in exit code 1. See
+# libbutl/standard-version.mxx for the predicates semantics.
+#
+# Other options:
+#
+# --is-version
+#
+#   Don't issue diagnostics if the argument is not a valid standard version.
+#
+function butl_standard_version () # [<options>] <standard-version>
+{
+  "$(butl_path)/standard-version" "$@"
+}

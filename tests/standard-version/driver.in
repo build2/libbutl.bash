@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# file      : tests/standard-version/driver.in
+# license   : MIT; see accompanying LICENSE file
+
+@import libbutl/standard-version@
+
+butl_standard_version "$@"

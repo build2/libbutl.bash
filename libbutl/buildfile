@@ -9,7 +9,12 @@ bash{utility}:             in{utility}
 bash{manifest-parser}:     in{manifest-parser}     bash{utility} exe{manifest}
 bash{manifest-serializer}: in{manifest-serializer} bash{utility} exe{manifest}
 
-exe{manifest}: cxx{manifest} $libs
+bash{standard-version}: in{standard-version}  \
+                        bash{utility}         \
+                        exe{standard-version}
+
+exe{manifest}:         cxx{manifest}         $libs
+exe{standard-version}: cxx{standard-version} $libs
 
 # Install our binding support executables next to the modules.
 #

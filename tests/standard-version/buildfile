@@ -1,0 +1,6 @@
+# file      : tests/standard-version/buildfile
+# license   : MIT; see accompanying LICENSE file
+
+import mods = libbutl.bash%bash{standard-version}
+
+exe{driver}: in{driver} $mods testscript
