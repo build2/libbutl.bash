@@ -64,9 +64,14 @@ function butl_manifest_serializer_start () # [--long-lines] [<file>]
 
   # See notes in butl_manifest_parser_start() on bash co-process issues.
   #
-  coproc { butl_serialize_manifest "${ops[@]}"; } >&"$butl_manifest_serializer_ofd"
+  coproc { kill -SIGSTOP $BASHPID; \
+           exec "$(butl_path)/manifest" "${ops[@]}" serialize; } \
+         >&"$butl_manifest_serializer_ofd"
+
   butl_manifest_serializer_ifd="${COPROC[1]}"
   butl_manifest_serializer_pid="$COPROC_PID"
+
+  butl_resume_process "$butl_manifest_serializer_pid"
 }
 
 # Finish the manifest serialization co-process.

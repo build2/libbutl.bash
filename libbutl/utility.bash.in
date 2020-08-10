@@ -23,3 +23,28 @@ function butl_path ()
   #
   dirname "${BASH_SOURCE[0]}"
 }
+
+# Resume a stopped process execution by sending it the SIGCONT signal.
+#
+# Note that to avoid races the function waits until the process enters the
+# stopped state.
+#
+function butl_resume_process () # <pid>
+{
+  local pid="$1"
+
+  while true; do
+
+    # Note that while the ps's -o option 'state' value is not specified by
+    # POSIX, it is supported by all the major implementations with the leading
+    # 'T' character indicating the 'stopped' process run state.
+    #
+    local s
+    s="$(ps -p "$pid" -o state=)"
+
+    if [ "${s:0:1}" == "T" ]; then
+      kill -SIGCONT "$pid"
+      break
+    fi
+  done
+}

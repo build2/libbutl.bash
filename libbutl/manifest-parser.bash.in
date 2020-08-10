@@ -67,9 +67,27 @@ function butl_manifest_parser_start () # [<file>]
   # multiple coprocesses at a time (see the BUGS section of bash(1) man page
   # for details).
   #
-  coproc { butl_parse_manifest; } <&"$butl_manifest_parser_ifd"
+  # An update: it turns out that we still can end up with an unset COPROC if
+  # the process finishes too early. To avoid that we suspend the subshell
+  # before executing the parser process and resume it after querying the
+  # COPROC value. Note that we need to be careful not to attempt to resume the
+  # process that hasn't suspended itself (see butl_resume_process() for
+  # details).
+  #
+  # Note that the suspend builtin doesn't work in subshells by default since
+  # there is no job control enabled for them. Also when it is enabled (via
+  # `set -m`), the builtin stops subshells recursively up to the command being
+  # run from the interactive shell, which is not what we want. That's why we
+  # use kill which is also a builtin and thus presumably is not slower than
+  # suspend.
+  #
+  coproc { kill -SIGSTOP $BASHPID; exec "$(butl_path)/manifest" parse; } \
+         <&"$butl_manifest_parser_ifd"
+
   exec {butl_manifest_parser_ofd}<&"${COPROC[0]}"
   butl_manifest_parser_pid="$COPROC_PID"
+
+  butl_resume_process "$butl_manifest_parser_pid"
 }
 
 # Finish the manifest parsing co-process.
