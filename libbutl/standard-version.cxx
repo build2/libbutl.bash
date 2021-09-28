@@ -6,9 +6,9 @@
 #include <iostream>
 #include <stdexcept> // invalid_argument
 
-#include <libbutl/utility.mxx>          // operator<<(ostream,exception)
-#include <libbutl/optional.mxx>
-#include <libbutl/standard-version.mxx>
+#include <libbutl/utility.hxx>          // operator<<(ostream,exception)
+#include <libbutl/optional.hxx>
+#include <libbutl/standard-version.hxx>
 
 using namespace std;
 using namespace butl;

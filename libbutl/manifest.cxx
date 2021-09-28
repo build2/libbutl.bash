@@ -8,10 +8,10 @@
 #include <iostream>
 #include <stdexcept> // invalid_argument
 
-#include <libbutl/utility.mxx>
-#include <libbutl/fdstream.mxx>
-#include <libbutl/manifest-parser.mxx>
-#include <libbutl/manifest-serializer.mxx>
+#include <libbutl/utility.hxx>
+#include <libbutl/fdstream.hxx>
+#include <libbutl/manifest-parser.hxx>
+#include <libbutl/manifest-serializer.hxx>
 
 using namespace std;
 using namespace butl;
