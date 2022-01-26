@@ -7,7 +7,7 @@ else
   butl_standard_version=true
 fi
 
-@import libbutl/utility@
+@import libbutl.bash/utility@
 
 # Check that the specified predicates are true for a standard version.
 #

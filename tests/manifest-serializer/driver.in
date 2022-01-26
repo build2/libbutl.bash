@@ -6,7 +6,7 @@
 trap "{ exit 1; }" ERR
 set -o errtrace # Trap ERR in functions.
 
-@import libbutl/manifest-serializer@
+@import libbutl.bash/manifest-serializer@
 
 butl_manifest_serializer_start "$@"
 

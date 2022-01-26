@@ -7,7 +7,7 @@ else
   butl_manifest_parser=true
 fi
 
-@import libbutl/utility@
+@import libbutl.bash/utility@
 
 # Parse the manifest reading from stdin and writing the binary representation
 # to stdout.

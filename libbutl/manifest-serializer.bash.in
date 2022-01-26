@@ -7,7 +7,7 @@ else
   butl_manifest_serializer=true
 fi
 
-@import libbutl/utility@
+@import libbutl.bash/utility@
 
 # Serialize the manifest reading the binary representation from stdin and
 # writing to stdout. Unless --long-lines is specified, break lines in values.

@@ -21,4 +21,4 @@ exe{standard-version}: cxx{standard-version} $libs
 
 # Install our binding support executables next to the modules.
 #
-exe{*}: install = bin/libbutl/
+exe{*}: install = bin/libbutl.bash/

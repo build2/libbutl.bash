@@ -3,6 +3,6 @@
 # file      : tests/standard-version/driver.in
 # license   : MIT; see accompanying LICENSE file
 
-@import libbutl/standard-version@
+@import libbutl.bash/standard-version@
 
 butl_standard_version "$@"
