@@ -1,8 +1,6 @@
 # file      : build/root.build
 # license   : MIT; see accompanying LICENSE file
 
-using bash
-
 cxx.std = latest
 
 using cxx
@@ -19,3 +17,8 @@ if ($cxx.class == 'msvc')
   cxx.coptions += /wd4251 /wd4275 /wd4800
 elif ($cxx.id == 'gcc')
   cxx.coptions += -Wno-maybe-uninitialized -Wno-free-nonheap-object # libbutl
+
+# Work around issue with sanitizers messing up rpath (see issue #1219).
+#
+if ($build.mode != 'skeleton')
+  using bash
