@@ -3,4 +3,4 @@ summary: build2 utility library for bash repository
 
 :
 role: prerequisite
-location: ../libbutl.git##HEAD
+location: ../libbutl.git#HEAD
