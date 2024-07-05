@@ -28,7 +28,8 @@
     : 1
     name: foo
     version: 1.2.3
-    description:\
+    description:
+    \
     foo
     executable
     \
