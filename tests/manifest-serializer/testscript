@@ -41,7 +41,7 @@
 : file
 :
 {
-  $* <<EOI >=file;
+  $* <<EOI >=file
 
     1
 
@@ -100,11 +100,11 @@
 
 : long-lines
 :
-{
+{{
   : file
   :
   {
-    $* --long-lines file <<EOI >=file;
+    $* --long-lines file <<EOI >=file
 
       1
 
@@ -132,18 +132,18 @@
       name: foooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
       EOO
   }
-}
+}}
 
 : version
 :
-{
+{{
   : absent
   :
   $* <<EOI 2>'stdout: error: format version pair expected' != 0
     name
     foo
     EOI
-}
+}}
 
 : empty
 :

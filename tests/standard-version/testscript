@@ -3,11 +3,11 @@
 
 : invalid-arguments
 :
-{
+{{
   $* --is-snapshot 2>'error: missing version'                  == 3 : no-ver
   $* '1.2.3' '1.0' 2>"error: unexpected argument '1.0'"        == 3 : unexpected
   $* '1.2'         2>"error: '.' expected after minor version" == 2 : no-minor
-}
+}}
 
 $* --is-snapshot     '1.2.3-a.1.12345.abcdef' == 0 : snapshot-yes
 $* --is-snapshot     '1.2.3-a.1'              == 1 : snapshot-no

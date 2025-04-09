@@ -38,7 +38,7 @@
 : file
 :
 {
-  cat <<EOI >=file;
+  cat <<EOI >=file
     : 1
     name: foo
     version: 1.2.3
@@ -77,7 +77,7 @@
 
 : version
 :
-{
+{{
   : absent
   :
   $* <<EOI 2>'stdin:1:1: error: format version pair expected' != 0
@@ -92,7 +92,7 @@
     : 2
     version: 1.2.3
     EOI
-}
+}}
 
 : empty
 :
